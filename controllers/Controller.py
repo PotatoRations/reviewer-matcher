@@ -14,7 +14,7 @@ class Controller(ControllerInterface):
         self.parse_file = parse_file
         return
 
-    def assign_reviewers(self, file: TextIOWrapper):
+    def assign_reviewers(self, file: TextIOWrapper, reviewer_load: int):
 
         # get and parse file into input matrix
         input_matrix = self.parse_file.parse_file(file)

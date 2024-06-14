@@ -8,4 +8,7 @@ class UIInterface:
     # Closes the screen
     def close(self):
         raise NotImplementedError
+    
+    def save_file(self):
+        raise NotImplementedError
 

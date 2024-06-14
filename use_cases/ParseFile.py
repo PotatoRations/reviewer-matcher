@@ -19,12 +19,26 @@ class ParseFile(ParseFileInterface):
             worksheet = workbook.worksheets[0]
         # create input matrix
         inputmatrix = InputMatrix()
+
+        raw_data = list(worksheet.rows)
+
         # Get reviewer names
-        for cell in worksheet.rows[0]:
-            pass
+        num_reviewers = len(raw_data[0]) - 1
+        for cell in raw_data[0][1:]:
+            inputmatrix.reviewers.append(str(cell))
 
         # Get applicant names
-        for cell in worksheet.columns[0]:
-            pass
+        num_applicants = len(raw_data) - 1
+        for row in raw_data:
+            inputmatrix.applicants.append(row[0])
 
-        raise NotImplementedError
+        # Get num values
+        for i, row in enumerate(raw_data[1:num_applicants+1]):
+            for j, cell in enumerate (row[1:num_reviewers+1]):
+                inputmatrix.matrix[i][j] = cell
+
+        print(inputmatrix.reviewers)
+        print(inputmatrix.applicants)
+        print(inputmatrix.matrix)
+
+        return inputmatrix

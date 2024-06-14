@@ -1,3 +1,4 @@
+from io import TextIOWrapper
 import shutil
 from tkinter import *
 from controllers.ControllerInterface import ControllerInterface
@@ -13,7 +14,7 @@ class UI(Tk, UIInterface):
         self.title("Reviewer Matcher")
 
         main_frame = Frame(self, width=500, height=500)
-        main_frame.place(relx=0.5, rely=0.3, anchor='center')
+        main_frame.place(relx=0.5, rely=0.4, anchor='center')
         # main_grid.pack(fill="both", padx=20, pady=20)
 
         ## Open file button stuff
@@ -31,13 +32,24 @@ class UI(Tk, UIInterface):
         self.open_button_label = Label(open_button_frame, text=open_button_text)
         self.open_button_label.grid(row=1, column=0, padx=UI.center_pad(open_button_frame, self.open_button_label), pady=5)
 
+        # Max reviewer stuff
+        # frame to contain things
+        max_load_frame = Frame(main_frame, width=500, height=100)
+        max_load_frame.grid(row=1, column=0, padx=UI.center_pad(main_frame, max_load_frame), pady=20)
+        # description label
+        max_load_label = Label(max_load_frame, text="Max applicants per reviewer")
+        max_load_label.grid(row=0, column=0, padx=UI.center_pad(max_load_frame, max_load_label), pady=5)
+        # entry box
+        self.reviewer_load_entry = Entry(max_load_frame)
+        self.reviewer_load_entry.insert(0, "6")
+        self.reviewer_load_entry.grid(row=1, column=0, padx=UI.center_pad(max_load_frame, self.reviewer_load_entry), pady=5)
 
         # path_button = Button(main_frame, text='Select Output Folder', command=self.select_folder)
         # path_button.grid(row=1, column=0, padx=UI.center_pad(main_frame, path_button), pady=0)
 
         # Start button stuff
         start_button_frame = Frame(main_frame, width=500, height=100)
-        start_button_frame.grid(row=1, column=0, padx=UI.center_pad(main_frame, start_button_frame), pady=20)
+        start_button_frame.grid(row=2, column=0, padx=UI.center_pad(main_frame, start_button_frame), pady=20)
         start_button = Button(start_button_frame, text='Start', command=self.assign_reviewers)
         start_button.grid(row=0, column=0, padx=UI.center_pad(main_frame, start_button), pady=0)
         # Error text label under button (if exists)
@@ -46,7 +58,7 @@ class UI(Tk, UIInterface):
 
         # Example sheet stuff
         example_button_frame = Frame(main_frame, width=500, height=100)
-        example_button_frame.grid(row=2, column=0, padx=UI.center_pad(main_frame, example_button_frame), pady=20)
+        example_button_frame.grid(row=3, column=0, padx=UI.center_pad(main_frame, example_button_frame), pady=20)
         example_button = Button(example_button_frame, text='Create Example File', command=self.save_example)
         example_button.grid(row=0, column=0, padx=UI.center_pad(main_frame, example_button), pady=0)
         # Error text label under example sheet button (if exists)
@@ -90,7 +102,24 @@ class UI(Tk, UIInterface):
             self.start_err_label.config(text=self.errmsg)
             self.update()
             return
-        self.controller.assign_reviewers(open(self.file, mode='r'))
+        
+        # cast and check if max reviewer load is invalid
+        reviewer_load = None
+        try:
+            reviewer_load = int(self.reviewer_load_entry.get())
+        except ValueError:
+            self.errmsg = "Please enter a valid reviewer limit"
+            self.start_err_label.config(text=self.errmsg)
+            self.update()
+            return
+        if reviewer_load <= 0:
+            self.errmsg = "Please enter a valid reviewer limit"
+            self.start_err_label.config(text=self.errmsg)
+            self.update()
+            return
+        
+        # run the stuff
+        self.controller.assign_reviewers(open(self.file, mode='rb'), reviewer_load)
         return
 
     def start(self):
@@ -110,14 +139,20 @@ class UI(Tk, UIInterface):
     def save_example(self):
         example_file_path = "./datafiles/example_sheet.xlsx"
         example_file = open(example_file_path, 'rb')
+        self.save_file(example_file)
         # TODO: do error if cannot open file
-        # filedialogue to get save to location
+        return 
+    
+    def save_file(self, file: TextIOWrapper):
+        # get location to save file
         save_location = fd.asksaveasfile(mode="wb", filetypes=[("Microsoft Excel spreadsheet", "*.xlsx")], defaultextension=[("Microsoft Excel spreadsheet", "*.xlsx")])
         if (save_location == None):
-            return
+            return  # return if no location is set
         # attempt to save
-        shutil.copyfileobj(example_file, save_location)
+        shutil.copyfileobj(file, save_location)
         # TODO: do error if saving is unsuccessful
+        file.close
+        save_location.close
         return 
 
 

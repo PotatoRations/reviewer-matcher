@@ -4,7 +4,7 @@ class InputMatrix:
     # Initialise empty matrix
     def __init__(self) -> None:
         self.reviewers = []
-        self.papers = []
+        self.applicants = []
         self.matrix = []
 
         # Not yet sure how to handle this, maybe with a flag in tuple?
