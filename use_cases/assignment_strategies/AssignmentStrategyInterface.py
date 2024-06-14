@@ -7,5 +7,5 @@ from use_cases.OutputMatrix import OutputMatrix
 """
 class AssignmentStrategyInterface():
 
-    def sort(self, matrix: InputMatrix) -> OutputMatrix:
+    def sort(self, matrix: InputMatrix, reviewer_load: int) -> OutputMatrix:
         raise NotImplementedError

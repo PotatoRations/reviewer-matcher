@@ -20,6 +20,6 @@ class Controller(ControllerInterface):
         input_matrix = self.parse_file.parse_file(file)
 
         # pass input matrix to use case
-        self.assign_reviewers_use_case.assign_reviewers(input_matrix)
+        self.assign_reviewers_use_case.assign_reviewers(input_matrix, reviewer_load)
 
         return

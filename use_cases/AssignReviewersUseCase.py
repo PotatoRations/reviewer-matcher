@@ -20,8 +20,8 @@ class AssignReviewersUseCase(AssignReviewersUseCaseInterface):
         self.strategy = None
         return
 
-    def assign_reviewers(self, input: InputMatrix):
-        output = self.strategy.sort(input)
+    def assign_reviewers(self, input: InputMatrix, reviewer_load: int):
+        output = self.strategy.sort(input, reviewer_load)
         self.presenter.present_output(output)
         return
     

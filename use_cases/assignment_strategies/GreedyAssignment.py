@@ -11,13 +11,19 @@ class GreedyAssignment(AssignmentStrategyInterface):
     reviewers_per_applicant = 3
     # todo: make this changeable from outside
     # TODO: also make it so limit of each category (divide by 3rds)
-    max_reviewer_load = 4
+
+    # scoring system:
+    # first reviewer: 4
+    # second reviewer: 2
+    # reader: 1
+    max_reviewer_score = 4
 
     def __init__(self):
         super().__init__()
 
-    def sort(self, input_matrix: InputMatrix) -> OutputMatrix:
+    def sort(self, input_matrix: InputMatrix, reviewer_load: int) -> OutputMatrix:
 
+        self.max_reviewer_score = reviewer_load
         # make a copy of input to do operations on
         input_copy = copy.deepcopy(input_matrix)
 
@@ -57,7 +63,7 @@ class GreedyAssignment(AssignmentStrategyInterface):
                 # wipe pairing on input_copy
                 input_copy.matrix[best_reviewer][applicant] = -1
                 # check if reviewer has max applicants, if so, set all compat to -1
-                if len(reviewer_assignments[best_reviewer]) >= self.max_reviewer_load:
+                if len(reviewer_assignments[best_reviewer]) >= self.max_reviewer_score:
                     for j in range(0, len(input_matrix.applicants)):
                         input_copy.matrix[best_reviewer][j] = -1
                 print(reviewer_assignments[best_reviewer])
