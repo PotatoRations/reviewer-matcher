@@ -107,7 +107,14 @@ class BetterParseFile(ParseFileInterface):
                     reviewer_index = id_to_reviewer_index[id]
                     inputmatrix.matrix[reviewer_index][j] = -1
                 except ValueError:
-                    print("invalid conflict: " + conflict)
+                    found = False
+                    for i, reviewer in enumerate(inputmatrix.reviewers):
+                        if conflict.lower() == reviewer.lower():
+                            inputmatrix.matrix[i][j] = -1
+                            found = True
+                            break
+                    if not found:
+                        print("invalid conflict: " + conflict)
 
         return inputmatrix
     

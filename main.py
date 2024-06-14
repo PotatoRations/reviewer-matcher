@@ -5,6 +5,7 @@ from use_cases.AssignReviewersUseCase import AssignReviewersUseCase
 from use_cases.BetterParseFile import BetterParseFile
 from use_cases.ParseFile import ParseFile
 from use_cases.assignment_strategies.GreedyAssignment import GreedyAssignment
+from use_cases.assignment_strategies.GreedyAssignmentSplit import GreedyAssignmentSplit
 
 
 def main():
@@ -14,7 +15,7 @@ def main():
     #fileparser = ParseFile()
     fileparser = BetterParseFile()
     assign_usecase = AssignReviewersUseCase()
-    greedy_assignment = GreedyAssignment()
+    greedy_assignment = GreedyAssignmentSplit()
     presenter = Presenter()
 
     ui.add_controller(controller)
@@ -26,7 +27,7 @@ def main():
     
 
     # Start UI
-    print("Hello World!")
+    print("Starting program")
     ui.start()
 
 if __name__ == "__main__":

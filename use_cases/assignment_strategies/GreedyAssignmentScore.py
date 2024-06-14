@@ -5,25 +5,24 @@ from use_cases.InputMatrix import InputMatrix
 from use_cases.OutputMatrix import OutputMatrix
 from use_cases.assignment_strategies.AssignmentStrategyInterface import AssignmentStrategyInterface
 
-
-class GreedyAssignment(AssignmentStrategyInterface):
+# Greedy assignment where load is calculated by score
+class GreedyAssignmentScore(AssignmentStrategyInterface):
     # hard-coded for now, maybe find a different solution later
     reviewers_per_applicant = 3
     # todo: make this changeable from outside
     # TODO: also make it so limit of each category (divide by 3rds)
 
     # scoring system:
-    # first reviewer: 4
-    # second reviewer: 2
-    # reader: 1
+    weights = [4, 2, 1]
     max_reviewer_load = 4
 
     def __init__(self):
         super().__init__()
 
-    def sort(self, input_matrix: InputMatrix, reviewer_load: int) -> OutputMatrix:
+    def sort(self, input_matrix: InputMatrix, apps_per_reviewer: int) -> OutputMatrix:
 
-        self.max_reviewer_load = reviewer_load
+        self.max_reviewer_load = apps_per_reviewer
+        
         # make a copy of input to do operations on
         input_copy = copy.deepcopy(input_matrix)
 
