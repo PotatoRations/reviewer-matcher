@@ -22,7 +22,7 @@ class AssignReviewersUseCase(AssignReviewersUseCaseInterface):
 
     def assign_reviewers(self, input: InputMatrix, reviewer_load: int):
         output = self.strategy.sort(input, reviewer_load)
-        self.presenter.present_output(output)
+        self.presenter.present_output(output, input)
         return
     
     def add_assignment_strategy(self, strategy: AssignmentStrategyInterface):

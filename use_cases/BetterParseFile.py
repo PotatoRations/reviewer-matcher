@@ -109,7 +109,7 @@ class BetterParseFile(ParseFileInterface):
                 except ValueError:
                     found = False
                     for i, reviewer in enumerate(inputmatrix.reviewers):
-                        if conflict.lower() == reviewer.lower():
+                        if conflict.lower().strip() == reviewer.lower():
                             inputmatrix.matrix[i][j] = -1
                             found = True
                             break
@@ -120,11 +120,12 @@ class BetterParseFile(ParseFileInterface):
     
     def calculate_compat(self, reviewer: int, applicant: int, reviewer_expertises: list, reviewer_program_areas: list, app_expertises: list, app_program_areas: list):
         score = 0
+        program_area_weight = 3
 
         # calculate program area, if one matches, set score to 1
         for program in reviewer_program_areas[reviewer]:
             if program in app_program_areas[applicant]:
-                score = 1
+                score = program_area_weight
 
         # calculate expertise
         for expertise in app_expertises[applicant]:
